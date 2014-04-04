@@ -31,16 +31,15 @@ public class Deplacement {
 		angle = 90;
 	}
 
-	public void random_search() {
+	public void random_search(float zone) {
 		pilot.setRotateSpeed(45);
-		pilot.rotate(-90);
-		pilot.rotate(180, true);
+		pilot.rotate(-zone);
+		pilot.rotate(zone*2, true);
 
 		Hashtable<Float, Integer> val_sonar = new Hashtable<Float, Integer>();
 		while (pilot.isMoving()) {
-			Delay.msDelay(50);
-			val_sonar
-					.put(pilot.getMovement().getAngleTurned(), u.getDistance());
+			Delay.msDelay(30);
+			val_sonar.put(pilot.getMovement().getAngleTurned(), u.getDistance());
 		}
 
 		// recherche min
@@ -56,16 +55,12 @@ public class Deplacement {
 			}
 		}
 		// fin recherche min
-		min_key -= 90;
+		min_key -= zone;
 		min += 10;
-		System.out.println(min);
-		System.out.println(min_key);
-		System.out.println(x + Math.cos(min_key * Math.PI / 180) * min);
-		System.out.println(y + Math.sin(min_key * Math.PI / 180) * min);
-		pilot.rotate(-90);
+		
+		pilot.rotate(-zone);
 		move_palet(min,min_key);
-		// pilot.rotate(min_key);
-		// move (min);
+
 
 	}
 
@@ -79,32 +74,33 @@ public class Deplacement {
 		pilot.rotate(Math.acos( (100 - x)/d) * 180.0 / Math.PI - angle);
 		angle=(float) (Math.acos( (100 - x)/d) * 180.0 / Math.PI);
 		move(d);
-		p.lacher();
+		lacher();
 	}
 
+	public void lacher()
+	{
+		p.lacher();
+		move(-10);
+		rotate(270-angle);
+		angle=270;
+	}
+	
 	  public void move_palet(double d,float t)
 	  {
 		  //code temp va jusqu'au palet
 		  pilot.rotate(t);
 		  angle+=t;
 		//Tant qu'on est mouvement
-		move(d);
-			/* On garde en mémoire la distance calculée au debut, 
-				On compare avec la nouvelle distance du même palet,
-				Si la nouvelle distance est superieure à l'anciene,
-				on refait une autre recherche
-			*/
-			double old_d = d;
-			if (old_d >= u.getDistance()) {
-				d = u.getDistance();
-			} else {
-				random_search();
-			}
-		/*
-		 * faire moitié distance avec minimun retenter de reperer la cible si
-		 * oui relancer recherche après s'etre replacer dans la bonne direction
-		 * si non repasser en détection aléatoire
-		 */
+		if(d>20)
+		{
+			move(d/2);
+			random_search(10);
+		}
+		else	  
+		{
+				move(d);
+		}
+		
 	}
 
 	public void move(double x) {

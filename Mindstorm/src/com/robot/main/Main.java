@@ -12,7 +12,7 @@ public class Main {
 		  Button.waitForAnyPress();
 		Deplacement d = new Deplacement();
 		while(true) {
-			d.random_search();
+			d.random_search(90);
 		}
 	}
 }
