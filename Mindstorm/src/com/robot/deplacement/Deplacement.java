@@ -42,8 +42,7 @@ public class Deplacement {
 		Hashtable<Float, Integer> val_sonar = new Hashtable<Float, Integer>();
 		while (pilot.isMoving()) {
 			Delay.msDelay(30);
-			val_sonar
-					.put(pilot.getMovement().getAngleTurned(), u.getDistance());
+			val_sonar.put(pilot.getMovement().getAngleTurned(), u.getDistance());
 		}
 
 		// recherche min
@@ -72,6 +71,7 @@ public class Deplacement {
 		Motor.C.rotate(-angle);
 	}
 
+	// Se déplacer vers le but adverse
 	public void move_enbut() {
 		double d = (Math.sqrt((100 - x) * (100 - x) + (280 - y) * 280 - y));
 		pilot.rotate(Math.acos((100 - x) / d) * 180.0 / Math.PI - angle);
@@ -85,6 +85,7 @@ public class Deplacement {
 		move(-10);
 		pilot.rotate(270 - angle);
 		angle = 270;
+		random_search(90);
 	}
 
 	public void move_palet(double d, float t) {
@@ -103,21 +104,22 @@ public class Deplacement {
 
 	public void move(double x) {
 		pilot.travel(x, true);
-		dl.update();
 		while (pilot.isMoving()) {
 			/*
 			 * refermer pince petite musique passer en retour maison
+			 *  && !p.getpalet()
 			 */
-			if (bump.isPressed() && !p.getpalet()) {
+			if (bump.isPressed()) {
 				pilot.stop();
 				p.prendre();
 
 			}
 			/*
 			 * refermer pince petite musique passer en retour maison
-			 */;
-			// else if detection ligne
-			// mise a jour position
+			 
+		     else if detection ligne
+			mise a jour position*/
+			dl.update();
 		}
 		System.out.println(Math.cos(angle * Math.PI / 180.0)
 				* pilot.getMovement().getDistanceTraveled());
